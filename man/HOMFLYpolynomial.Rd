@@ -38,7 +38,7 @@ the HOMFLY polynomial (as string)
 	
 	Kauffman, L. Knots and Physics. Teaneck, NJ: World Scientific, p. 19, 1991.
 	
-	Comoglio F. and Rinaldi M. A Topological Framework for the Computation of the HOMFLY Polynomial and Its Application to Proteins (2011) 
+	Comoglio F. and Rinaldi M. (2011) A Topological Framework for the Computation of the HOMFLY Polynomial and Its Application to Proteins 
 	PLoS ONE 6(4): e18693, doi:10.1371/journal.pone.0018693 
 	ArXiv:1104.3405
 %% ~put references to the literature/web site here ~

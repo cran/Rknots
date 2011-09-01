@@ -1,16 +1,16 @@
-\name{diagramPlot}
-\alias{diagramPlot}
+\name{plotKnotDiagram}
+\alias{plotKnotDiagram}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Plot a knot or link diagram
 %%  ~~function to do ... ~~
 }
 \description{
-Plot a knot or link diagram, with under- and overcrossings highlight
+Plot a knot or link diagram.
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-diagramPlot(points3D, ends, text = FALSE, ...)
+plotKnotDiagram(points3D, ends, text = FALSE, verbose = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -23,6 +23,9 @@ diagramPlot(points3D, ends, text = FALSE, ...)
   \item{text}{logical, if TRUE the numbering of the points is shown 
 %%     ~~Describe \code{n} here~~
 }
+  \item{verbose}{logical, indicating whether information about the plot should be reported
+%%     ~~Describe \code{n} here~~
+}
 	\item{\dots}{other graphical parameters for \code{plot}
 %%     ~~Describe \code{n} here~~
 }
@@ -31,6 +34,7 @@ diagramPlot(points3D, ends, text = FALSE, ...)
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
+Called for its effect. If \code{verbose}, then the following list is returned.
 	\item{colors}{a vector of length \code{nrow(points3D)-1} containing the colors of each edge of the diagram}
 	\item{sint}{a list of length \code{nrow(points3D)-1} where the \eqn{i}-th entry contains the parameter(s) \eqn{k} 
 		of the negative intersections (intersection sign -1) of the edge \eqn{i}}
@@ -38,13 +42,6 @@ diagramPlot(points3D, ends, text = FALSE, ...)
 		parameter used to represent undercrossings in the diagram}
 	\item{ir}{a vector of integers containing the number of the edges that have been plotted}
 	\item{points3D}{an \eqn{N} x 3 matrix of the \eqn{x}, \eqn{y}, \eqn{z} coordinates of the polygonal link that has been plotted}
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%Returns a list of two elements
- % \item{points3D}{an n x 3 matrix of the x, y, z coordinates of the reduced structure}
- % \item{ends}{a vector of positive integers (if a non empty \code{end} 
- % has been provided as an argument defining the separators of the reduced structure}
-%% ...
 }
 \references{
 Weisstein, Eric W. "Knot diagram." From MathWorld--A Wolfram Web Resource, \url{http://mathworld.wolfram.com/KnotDiagram.html}
@@ -73,7 +70,17 @@ points3D <- Rolfsen.table.ms$"4.1"
 ##Points projection (not required)
 points3D <- PCAProjection(points3D)
 
-diagramPlot(points3D, ends = c(), lwd = 1.5)
+plotKnotDiagram(points3D, ends = c(), lwd = 1.5)
+
+##Plot the diagram of a link
+data(link.table, package = "Rknots")
+points3D <- link.table[[100]]$points3D
+ends <- link.table[[100]]$ends
+
+points3D.reduced <- AlexanderBriggs(points3D, ends = ends)
+
+#show the reduced link diagram
+plotKnotDiagram(points3D.reduced$points3D, points3D.reduced$ends) 
 %%
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

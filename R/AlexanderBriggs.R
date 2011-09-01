@@ -37,46 +37,62 @@ interiorTriangle <- function(triangle2D, point) {
 	return(inside)
 }
 
-move3D <- function (points3D) {
-	n <- nrow(points3D)
 
-	repeat {
-		n.in <- n
-		perm <- c(3, 1, 2, 3)
-		while (max(perm) <= n) {
-			triangle <- points3D[perm, ]
-			prev.int <- c()
-			if((perm[2] - 2) >= 1) {
-				for(i in 1 : (perm[2] - 2)) {
+segmentSet <- function(comp, i, extends)
+{
+	start <- 1 : extends[length(extends)]
+	indextr <- extends[comp] + i + 0:3
+	set <- setdiff(setdiff(start, indextr), extends + 1) - 1
+	return(set)
+}
+	
+move3D <- function(points3D, ends) {
+	ncomp <- length(ends) + 1
+	repeat { 
+		extends <- c(0, ends, nrow(points3D))
+		npoints <- nrow(points3D)
+		npoints.in <- npoints
+		component <- 1 
+		while (component <= ncomp){
+			perm <- c(3, 1, 2, 3)
+			points3D.comp <- points3D[(extends[component] + 1) : extends[component + 1], ]
+			npoints.comp <- nrow(points3D.comp)
+			while (max(perm) <= npoints.comp) 
+			{
+				triangle <- points3D.comp[perm, ]
+				intersections <- c()
+				segments <- segmentSet(component, perm[2], extends)
+				for (i in segments) { 
 					segment <- rbind(points3D[i, ], points3D[i + 1, ])
-					prev.int <- c(prev.int, triangleIntersection(triangle, segment))
+					intersections <- unique(c(intersections, triangleIntersection(triangle, 
+											segment)) )
 				}
-			}
-			if(length(intersect(unique(prev.int), TRUE)) != 0) {
+				if (length(intersect(unique(intersections), TRUE)) != 0) {
+					perm <- perm + 1
+					next
+				}
+				total <- unique( intersections )
+				if (identical(total, FALSE) | identical(total, c())) 
+					points3D <- points3D[-(extends[component]+perm[3]), ]
 				perm <- perm + 1
-				next
+				npoints <- nrow(points3D)
+				npoints.comp <- npoints.comp - 1
+				extends[(component + 1) : length(extends)] <- extends[(component + 1) : length(extends)] - 1
+				ends <- extends[-c(1, length(extends))]
+				points3D.comp <- points3D[(extends[component] + 1) : extends[component + 1],]
+				npoints.comp <- nrow(points3D.comp)
 			}
-			next.int <- c()
-			if((perm[1] + 1) < nrow(points3D)) {
-				for(i in (perm[1] + 1) : (nrow(points3D) - 1)) {
-					segment <- rbind(points3D[i, ], points3D[i + 1, ])
-					next.int <- c(next.int, triangleIntersection(triangle, segment))
-				}
-			}
-			pooled.int <- c(prev.int, next.int)	
-			total <- unique(pooled.int)		
-			if(identical(total, FALSE) | identical(total, c())) 
-				points3D <- points3D[-perm[3], ]
-			perm <- perm + 1
-			n <- nrow(points3D)
+			component <- component+1
 		}
-		if(n == n.in)
+		if (npoints == npoints.in) 
 			break
 	}
+	return(list(points3D = points3D, ends = extends[-c(1, length(extends))]))
+}
+
+AlexanderBriggs <- function(points3D, ends = c()) {
+	points3D <- move3D(points3D, ends)
 	return(points3D)
 }
 
-AlexanderBriggs <- function(points3D) {
-	points3D <- move3D(points3D)
-	return(points3D)
-}
+

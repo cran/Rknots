@@ -32,9 +32,9 @@ Each inclusion corresponds to a Generalized Reidemeister Move.
 \value{
 %%  ~Describe the value returned
 %%  If it is a LIST, use
-Returns a list of two elements
+Returns a list of three elements
   \item{points3D}{an \eqn{M} x 3 matrix of the \eqn{x}, \eqn{y}, \eqn{z} coordinates of the reduced structure}
-  \item{ends}{a vector of positive integers (if a non empty \code{end} 
+  \item{ends}{a vector of positive integers (if a non empty \code{ends} 
   has been provided as an argument defining the separators of the reduced structure}
   \item{M}{the intersection matrix of the reduced structure}
 %% ...
@@ -70,10 +70,10 @@ trefoil.reduced <- msr(trefoil, c())
 
 ## 3D plot of both the trefoil and its reduced structure
 require(rgl)
-msrPlot(trefoil, text = FALSE, 
-    radius = 0.01, lwd = 2.5, col = "blue")
-msrPlot(trefoil.reduced$points3D, text = TRUE,
-    radius = 0.01, lwd = 5, col = "red")
+plotKnot3D(trefoil, ends = c(), text = FALSE, 
+    radius = 0.01, lwd = 2.5)
+plotKnot3D(trefoil.reduced$points3D, ends = c(), text = TRUE,
+    radius = 0.5, lwd = 2.5)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

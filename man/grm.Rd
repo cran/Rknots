@@ -73,10 +73,9 @@ trefoil.first.reduction <-
 		grm(points3D = trefoil, b = 1, ends = c(), inputM = intersectionMatrix(trefoil))
 
 ##Plot the input structure and the result of the reduction step (in blue)
-msrPlot(trefoil, radius = 0.01, lwd = 0.5)
-msrPlot(trefoil.first.reduction$points3D, text = FALSE, 
-	radius = 0.01, lwd = 2, col = "blue")
-
+plotKnot3D(trefoil, ends = c(), radius = 0.01, lwd = 0.5)
+plotKnot3D(trefoil.first.reduction$points3D, ends = c(), text = FALSE, 
+	radius = 0.5, lwd = 2)
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the

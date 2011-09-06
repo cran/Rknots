@@ -5,25 +5,20 @@
 # Author: Federico Comoglio @ D-BSSE, ETH Zurich
 ###############################################################################
 
-findKnot <- function(points3D) #, fast = FALSE)
+findKnot <- function(points3D) 
 {
-	points3D <- AlexanderBriggs(points3D)
-#	if(fast) {
-#		poly <- mVA(points3D)
-#		return(poly)
-#	}
+	points3D <- AlexanderBriggs(points3D, c())$points3D
+
 	tree.leaves <- skeinIterator(points3D, c())
 	poly <- HOMFLYpolynomial(tree.leaves[[1]], tree.leaves[[2]], -1)
 	return(poly)
 }
 
-findProteinKnot <- function(pdbID, join.gaps = FALSE) #, fast = FALSE)
+findProteinKnot <- function(pdbID, join.gaps = FALSE)
 {
 	require(bio3d)
 	data.out <- data.frame("NoName", Inf, Inf, stringsAsFactors = FALSE)
 	colnames(data.out) <- c("PDB ID-(Part)", "#Aminoacids", "HOMFLY polynomial")
-			#ifelse(fast, "Alexander polynomial", "HOMFLY polynomial"))
-	
 	points3D <- fileImport(pdbID)
 	n <- nrow(points3D)
 	
@@ -43,7 +38,7 @@ findProteinKnot <- function(pdbID, join.gaps = FALSE) #, fast = FALSE)
 		return(data.out)
 	}
 	points3D <- centroidClosure(points3D, 2)
-	poly <- findKnot(points3D) #, fast)
+	poly <- findKnot(points3D)
 	data.out[1, ] <- c(pdbID, n, poly)
 	return(data.out)
 }

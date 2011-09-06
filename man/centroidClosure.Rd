@@ -62,8 +62,8 @@ if(require(bio3d)) {
 	
 	##Plot the result
 	require(rgl)
-	msrPlot(closed, text = FALSE, showNC = FALSE, 
-    radius = 0.01, lwd = 5)
+	plotKnot3D(closed, ends = c(), text = FALSE, showNC = FALSE, 
+    	radius = 0.01, lwd = 5)
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

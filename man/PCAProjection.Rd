@@ -50,7 +50,7 @@ Federico Comoglio
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{diagramPlot}}
+\code{\link{plotKnotDiagram}}
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
@@ -62,8 +62,8 @@ if(require(bio3d)) {
 
 	##Diagram plot of both the original and rotated structures
 	par(mfrow = c(1,2))
-	diagramPlot(protein, ends = c(), lwd = 1.5)
-	diagramPlot(protein.proj, ends = c(), lwd = 1.5)
+	plotKnotDiagram(protein, ends = c(), lwd = 1.5)
+ 	plotKnotDiagram(protein.proj, ends = c(), lwd = 1.5)
 }
 }
 }

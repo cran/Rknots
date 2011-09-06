@@ -31,7 +31,30 @@
 \alias{endComponentCorrection}
 \alias{findComponent}
 \alias{buildRis2}
-
+\alias{isWholeNumber}
+\alias{fillToN}
+\alias{lexOrder}
+\alias{rid2D}
+\alias{orientedSign}
+\alias{norM}
+\alias{listVertices}
+\alias{vertexPresentation}
+\alias{findNextE}
+\alias{endsAndTriple}
+\alias{localize}
+\alias{findComponent}
+\alias{endsAndTriple}
+\alias{endComponentCorrection}
+\alias{singleIntersectionS}
+\alias{cp}
+\alias{cpr}
+\alias{rotFactor}
+\alias{escapeDir}
+\alias{buildRis}
+\alias{escape}
+\alias{computeFactors}
+\alias{plotComponent}
+\alias{segmentSet}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{

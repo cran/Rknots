@@ -5,8 +5,8 @@
 # Author: Maurizio Rinaldi @ University of Piemonte Orientale
 ###############################################################################
 
-diagramPlot <-
-		function(points3D, ends, text = FALSE, ...) {
+plotKnotDiagram <-
+		function(points3D, ends, text = FALSE, verbose = TRUE, ...) {
 	points2D <- points3D[, 1:2]
 	npoints <- nrow(points3D)
 	edeleted <- sort(c(0, ends, npoints+1))
@@ -72,11 +72,13 @@ diagramPlot <-
 		text(points3D[1: npoints, ], 
 				labels = as.character(1: npoints), offset = 0.75)
 	}
+	if (verbose) {
 	return(list("colors" = colors,
 					"sint" = sneg,
 					"splot" = splot,
 					"ir" = ir,
 					"points3D" = points3D))
+	}
 }
 
 

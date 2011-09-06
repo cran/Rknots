@@ -1,8 +1,8 @@
 Package: Rknots
 Type: Package
 Title: Rknots
-Version: 1.0
-Date: 2011-07-04
+Version: 1.1
+Date: 2011-09-01
 Depends: R (>= 2.12.0), rgl, rSymPy
 Suggests: bio3d
 Author: Federico Comoglio and Maurizio Rinaldi
@@ -21,6 +21,6 @@ Description: The Rknots package contains functions for the topological
         System for Python and to the Rsympy package.
 License: GPL-2
 LazyLoad: yes
-Packaged: 2011-07-04 09:52:22 UTC; comoglif
+Packaged: 2011-09-05 21:04:34 UTC; comoglif
 Repository: CRAN
-Date/Publication: 2011-07-04 10:22:31
+Date/Publication: 2011-09-06 08:48:45

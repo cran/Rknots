@@ -15,6 +15,7 @@
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
+data(Rolfsen.table)
 Rolfsen.table
 Rolfsen.table.ms
 }

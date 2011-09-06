@@ -55,7 +55,7 @@ HOMFLYpolynomial <- function(leaves, tree, skein.sign) {
 		}
 		toeval <- paste('Add(', 
 				paste(components.contribute, '*', ancestors.contribute, collapse = '+'), ').expand()')
-		print(toeval)
+		#print(toeval)
 		polynomial <- sympy(toeval)
 	}
 	return(polynomial)

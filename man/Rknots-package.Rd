@@ -3,7 +3,7 @@
 \alias{Rknots}
 \docType{package}
 \title{
-Rknots: knots detection with R
+Rknots: topological knots characterization with R
 %%~~ package title ~~
 }
 \description{
@@ -16,28 +16,33 @@ either biological or synthetic knotted polymers, with a major focus on proteins.
 \tabular{ll}{
 Package: \tab Rknots\cr
 Type: \tab Package\cr
-Version: \tab 1.1\cr
-Date: \tab 2011-09-01\cr
+Version: \tab 1.2\cr
+Date: \tab 2011-12-24\cr
 License: \tab GPL-2\cr
 LazyLoad: \tab yes\cr
 }
 %%~~ An overview of how to use the package, including the most important ~~
-The Rknots package contains functions for the topological analysis of polymeric structures, 
-either biological polymers or synthetic structures, with a major focus on proteins.
+The Rknots package contains functions for the topological analysis of polymers, with a major focus on proteins. 
+The package provides the following set of tools:
 
-This release provides a Protein Data Bank (PDB) entries import function, 
-two structure reduction algorithms (Alexander-Briggs reduction for knots and links and MSR), 
-polynomials (Alexander, Jones and HOMFLY polynomial via Conway's skein triple and the multivariate Alexander polynomial of links)
-and linking number computation, graphical functions and a set of utilities.
-Credits are due to the bio3d package on which the PDB import function is based, 
-to the google code project SymPy that provides a Computer Algebra System for Python and to the Rsympy package. 
+1)Functions to import 3D structures or fetch pdb file from the Protein Data Bank (PDB) are implemented with a set of utilities.
 
-Since Rknots would serve as a general purpose framework to identify knots in 3D structures, being 
-therefore not limited to proteins, we have tried to carefully describe also part of the low-level functions 
-to ensure a possible integration within other frameworks.
+2)Structure reduction algorithms: the Alexander-Briggs reduction scheme for knots and links 
+and the Minimal Structure Reduction (MSR) algorithm.
+
+3)Polynomial computation: Alexander, Jones and HOMFLY polynomial via geometrical construction of the Conway's skein triple.
+Multivariate Alexander polynomial of links. Linking number.
+
+4)Graphical representation of knot and link diagrams. 3D knots and links representation.
+
+5)Large set of utilities.
+
+Credits are due to the bio3d package, to the google code project SymPy and to Rsympy. 
+
+Rknots serves as a general purpose framework to identify knots in 3D structures and is not limited to proteins. 
+We have therefore described part of the low-level functions to maximize their integration within other frameworks.
  
-For any further details or feedback please feel free to contact us. Finally, we encourage external contributions 
-to the package.
+For any further details or feedback please feel free to contact us. Finally, we encourage external contributions to the package.
 
 
 License: GPL-2

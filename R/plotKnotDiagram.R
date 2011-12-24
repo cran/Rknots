@@ -3,83 +3,91 @@
 # 9:25:11 AM
 #by: 
 # Author: Maurizio Rinaldi @ University of Piemonte Orientale
+# Author: Federico Comoglio @ D-BSSE, ETH Zurich
 ###############################################################################
 
-plotKnotDiagram <-
-		function(points3D, ends, text = FALSE, verbose = TRUE, ...) {
-	points2D <- points3D[, 1:2]
-	npoints <- nrow(points3D)
-	edeleted <- sort(c(0, ends, npoints+1))
-	restrictionInt <- vector("list", npoints-1) 
-	for (i in 1 : (npoints-1)) {
-		restrictionInt[[i]] <- edgeIntersectionsK(points3D, 1:npoints, i)
-	}
-	print(restrictionInt)
-	length(restrictionInt) <- npoints-1;
-	restInt <- restrictionInt
-	ncc <- diff(edeleted) - 1 #points of each component
-	colors <- rep(hsv(seq(0, 1, length = length(ncc) + 1))[-1], ncc)
-	ir <- setdiff(1 : npoints, edeleted) #last edeleted does not play any role
-	sneg <- vector("list", npoints-1)
-	for (i in 1:(npoints-2)) {
-		temp <- nrow(restrictionInt[[i]]);
-		if (length(temp) > 0)
-		{
-			int <- c()
-			for (j in 1:temp)
-			{
-				#edge split condition
-				if(restInt[[i]][j,]$sign == -1 &&
-						is.element(restInt[[i]][j, ]$edge, edeleted) == FALSE)
-					int = c(int, restrictionInt[[i]][j, ]$k)	
-			}
-			if (length(int) > 0) {
-				sneg[[i]] <- sort(c(sneg[[i]], int))
-			} 
-		}
-	}
-	splot <- vector("list", npoints-1)
-	for (i in 1:length(sneg)) sneg[[i]] <- c(0, sneg[[i]], 1)
-	for (i in 1:(npoints-1))
-	{
-		if(length(sneg[[i]]) > 2)
-		{
-			for (j in 2:(length(sneg[[i]])-1))
-			{ 
-				s <- c(sneg[[i]] [j], sneg[[i]][ j - 1], sneg[[i ]][j+1]); 
-				temp <- s[1] - (1/20)*(s[1] - s[2]); 
-				temp2 <- s[1] + (1/20)*(s[3] - s[1]);
-				if (temp < 0) { 
-					temp <- s[1] - (1/30)*s[1];
-					temp2 <- s[1] + (1/30)*s[1];
-				}
-				splot[[i]] <- c(temp, temp2, splot[[i]]);  
-			}
-		}
-		splot[[i]] <- sort(c(0, splot[[i]], 1) )
-	}
-	plot(points2D, type="n", xlab = "", ylab = "", bty = "n")
-	for (i in seq(length(ir)-1)) {
-		kk <- ir[i]
-		points2D <- points3D[, 1:2]
-		for (j in seq(to=length(splot[[kk]])-1, by = 2)) { 
-			P0 <- points2D[kk, ] +  splot[[kk]][j] * (points2D[kk + 1, ] - points2D[kk, ])
-			P1 <- points2D[kk, ] +  splot[[kk]][j + 1] * (points2D[kk + 1, ] - points2D[kk, ])
-			lines(c(P0[1], P1[1]), c(P0[2], P1[2]), col = colors[i], ...)
-		} 
-	}
-	if (text) {
-		text(points3D[1: npoints, ], 
-				labels = as.character(1: npoints), offset = 0.75)
-	}
-	if (verbose) {
-	return(list("colors" = colors,
-					"sint" = sneg,
-					"splot" = splot,
-					"ir" = ir,
-					"points3D" = points3D))
-	}
+defineCut <- function(points3D, size) {	
+	cut <- min( diff( apply(points3D, 2, range) ) ) / size
+	return(cut)
 }
+
+splitUndercrossing <- function(points2D, i, cut)
+{
+	r1 <- norM(points2D[i - 1, ] - points2D[i, ])
+	r2 <- norM(points2D[i + 1, ] - points2D[i, ])
+	radius <- min(c(r1, r2, cut))
+	V1 <- points2D[i - 1, ] - points2D[i, ]
+	V2 <- points2D[i + 1, ] - points2D[i, ]
+	matrix(c(points2D[i, ] + 0.5 * radius * (V1) / norM(V1),
+			 points2D[i,] + 0.5 * radius * (V2) / norM(V2)),
+				nrow = 2, byrow = TRUE)
+}
+
+plotDiagram <- function(points3D, ends, pca = FALSE, size = 1, colors = c(), return.vars = FALSE, ...) {
+	#if PCA
+	if(pca) points3D <- PCAProjection( points3D )
+	vp <- vertexPresentation(points3D, ends)
+	if( is.null(vp) ) ##no intersections
+		return(plot(size * points3D[, 1:2], xlab = '', ylab = '', type = 'l', axes = FALSE, ...))
+	
+	p3 <- t( sapply(vp$points3Dout, "[[", 1) )
+	points2D <- p3[, 1:2]
+	n <- nrow( points2D )
+	endsout <- vp$endsout 
+	extends <- c(0, endsout, n)
+	
+	eAT <- auxiliaryAlexander(get2D(vp$points3Dout), vp$ends)
+	under <- eAT[[7]] 
+	over <- eAT[[5]]
+	n.under <- length(under)
+	comp <- sapply(1 : n, function(x) -1 + localize(x, extends))
+	
+	if(is.null(colors)) {
+		colors <- 1 : max(comp) #not supplied by the user
+		colors.set <- comp
+	}
+	else 
+		colors.set <- rep( colors, times = diff(extends) )
+	
+	cut.k <- defineCut(p3, size)
+	
+	plot(size * points2D, xlab = '', ylab = '', type = 'n', axes = FALSE, ...)
+	
+	split.under <- lapply(under, function(x) splitUndercrossing(points2D, x, cut.k))
+	dd <- setdiff(setdiff( seq(-1 + n), c(under - 1, under) ), endsout)
+	n.max <- 0
+	for (i in dd) 
+		lines(points2D[i : (i + 1), 1], points2D[i : (i + 1), 2], col = colors.set[i], ...)
+	
+	tmp <- lapply( c(unique(comp)), function(x) intersect(dd, which(comp == x)))
+	normV <- lapply(tmp, function(j) 
+				sapply(j, function(x) norM( points2D[x + 1, ] - points2D[x, ])) )
+	longest.idx <- lapply(normV, which.max)
+	longest.edge <- sapply( 1 : max(comp), function(x) tmp[[x]][longest.idx[[x]]])	
+	for (i in seq(length(under))) {
+		lines(c(split.under[[i]][2, 1], points2D[under[i] + 1, 1]),
+				c(split.under[[i]][2, 2], points2D[under[i] + 1, 2]), col = colors.set[under[i]], lwd = 1)
+		lines(c(split.under[[i]][1, 1], points2D[under[i] - 1, 1]),
+				c(split.under[[i]][1, 2], points2D[under[i] - 1, 2]), col = colors.set[under[i]], lwd = 1)
+	}
+	for(i in 1 : max(comp)) {
+		s <- longest.edge[i]
+		arrows(points2D[s, 1], points2D[s, 2],
+				.5 * (points2D[s, 1] + points2D[s + 1, 1]),
+				.5 * (points2D[s, 2] + points2D[s + 1, 2]), length = 0.1, col = colors[i], ...)
+	}
+	
+	if(return.vars)
+		return(list(points3D = p3, ends = endsout, undercross = under, overcross = over, component = comp) )
+}
+
+
+
+
+
+
+
+
 
 
 

@@ -309,7 +309,7 @@ auxiliaryPoints <- function(points3D, ends, ancestor.signs, M) {
 			Xsw <- Xij[1, ] + k.z * (Xij[2, ] - Xij[1, ])
 			Xsw <- rquad[1, ] + k.sw * (Xsw - rquad[1, ])
 			pointsij.test <- rbind(rquad[2, ], Xsw, rquad[c(4,3), ])
-			##punti di test per l'intersezione
+
 			if(singleIntersection(pointsij.test, "k")$sign == -1 && k.z < 2^50) 
 				k.sw <- k.sw + ((1 - k.sw) / 2)
 			else
@@ -389,8 +389,6 @@ skeinIterator <- function(points3D, ends, M = c()) {
 			tempM <- tree[[index]]$M
 			tempends <- tree[[index]]$ends
 			tempM[lower.tri(tempM)] <- 0
-			#tempM[tempends, ] <- tempM[tempends, ] * 0
-			#tempM[, tempends] <- tempM[, tempends] * 0
 			dMlist[[i]] <- tempM
 			toleaves[i] <- ((length(which(dMlist[[i]] == -1)) == 0) || (length(which(dMlist[[i]] == 1)) == 0))
 		}	

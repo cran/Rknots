@@ -5,57 +5,6 @@
 # Author: Maurizio Rinaldi @ UPO, Novara, Italy
 ###############################################################################
 
-norM <- function(x) sqrt(sum(x ^ 2))
-
-isWholeNumber <- function(x, tol = .Machine$double.eps ^ 0.5)  
-	abs(x - round(x)) < tol
-
-localize <- function(i, set) {
-	which(sort(c(i, set)) == i)[1]
-}
-
-lexOrder <- function(B) {
-	nc <- max(nchar(B))
-	temp <- apply(B, c(1,2), fillToN, nc)
-	temp <- apply(temp, 1, paste, sep = "", collapse = "")
-	return(order(temp))
-}
-
-rid2D <- function(points3D) 
-	lapply(lapply(points3D, "[[", 1), "[", 1 : 2)
-
-cp <- function(A) sign(A[1, 1] * A[2, 2] - A[1, 2] * A[2, 1])
-
-cpr <- function(A)  cp(A) * acos( A[1, ] %*% A[2, ] / (norM(A[1, ] * norM(A[2, ]))) )
-
-fillToN <- function(string, n){
-	nc <- nchar(string)
-	if (nchar(string) < n)
-		temp <- paste(
-					paste(rep("0", n - nc), sep = "", collapse = ""),
-					string, sep = "")
-	else
-		temp <- string
-	return(temp)
-}
-
-orientedSign <- function (points3D, edge.indices) {
-	x <- diff(points3D[edge.indices[1] + c(0, 1), ])[1:2]
-	y <- diff(points3D[edge.indices[2] + c(0, 1), ])[1:2]
-	A <- matrix(c(x, y), ncol = 2, byrow = TRUE)
-	cp <- A[1, 1] * A[2, 2] - A[1, 2] * A[2, 1]
- return(sign(cp))}
-
-findNextE <- function(k, ends) {
-	if  (k %in% ends==FALSE)
-		return(k + 1)
-	else 
-		return(ends[which(ends == k) - 1][1] + 1)
-}
-
-findComponent <- function(edge, i)  
-	length(which(i < edge))
-
 listVertices <- function(points3D, ord.int)
 {
 	vertexlist <- ord.int
@@ -74,6 +23,8 @@ vertexPresentation <- function(points3D, ends = c()) {
 	nedge <- npoints - 1
 	M <- intersectionMatrix(points3D, ends)
 	undercross <- which(M == -1, arr.ind = TRUE)
+	if( nrow(undercross) < 2) #no need to go ahead. ##
+		return( c() ) ##
 	nunder <- nrow(undercross)
 	radii <- c()
 	Qp.list <- e.under <- e.over <- list()
@@ -152,7 +103,7 @@ vertexPresentation <- function(points3D, ends = c()) {
 }
 
 
-endsAndTriple <- function(points2D, ends) {
+auxiliaryAlexander <- function(points2D, ends) {
 	undercross <- which(sapply(points2D, "[", 2) == -1)
 	comp.ends <- 0
 	for (i in 1 : length(ends)) {
@@ -179,7 +130,13 @@ endsAndTriple <- function(points2D, ends) {
 	temp <- order(outgoing.under)
 	signs <- unlist(sapply(points2D[which(sapply(points2D, "[", 2) == -1)], "[" , 3))[temp]
 	triples <- triples[temp]
-	return(list(nunder, triples, comp.ends, signs,pos.Q.over,ends,undercross))
+	return(list(nunder = nunder, 
+				triples = triples, 
+				comp.ends = comp.ends, 
+				signs = signs,
+				pos.Q.over = pos.Q.over,
+				ends = ends,
+				undercross = undercross))
 }
 
 
@@ -286,6 +243,8 @@ escapeDir <- function(x1, x2)
 
 buildRis <- function(points3D, ends, compute.points2D = FALSE) {
   	rv <- vertexPresentation(points3D, ends)
+	if(is.null( rv )) #meaning there is no cross.
+		return( c() ) #no need to go ahead.
   	endsout <- rv[[2]]
   	points3Dout <- rv$points3Dout
 	if(compute.points2D)
@@ -293,102 +252,114 @@ buildRis <- function(points3D, ends, compute.points2D = FALSE) {
 	point2D <- rid2D(rv$points3Dout)
 	for (i  in 1 : length(points3Dout)) 
 		points3Dout[[i]][[1]] <- point2D[[i]]
-	ris <- endsAndTriple(points3Dout, endsout)
+	ris <- auxiliaryAlexander(points3Dout, endsout)
 	if(compute.points2D)
 		return(list(ris, points2D))
 	else
 		return(ris)
 }
 
-escape <- function(points2D, undercross, positionQsovercross, endout) {
-	nundercross <- length(undercross)
-	x1 <- undercross[nundercross - 1]
-	x2 <- positionQsovercross[nundercross - 1]
+
+escapePath <- function(points2D, undercross, positionQsovercross, endout) {
+	nunder <- length(undercross)
+	x1 <- undercross[nunder - 1]
+	x2 <- positionQsovercross[nunder - 1]
 	a1 <- points2D[x2 + 1, ] - points2D[x2, ] 
 	a2 <- points2D[x1 + 1, ] - points2D[x1, ]
 	np <- nrow(points2D)
-	diam <- sqrt(max(apply((points2D - 
-							matrix(apply(points2D, 2, mean), nrow = np, ncol = 2, byrow = TRUE)) ^ 2, 1, sum))) * 2
-	
-	epsilon <- .5 * min( dist ( unique( points2D) ) )
-	
+	diam <- sqrt(max(apply((points2D - matrix(apply(points2D, 2, mean), 
+		nrow = np, ncol = 2, byrow = TRUE)) ^ 2, 1, sum))) * 2
+	epsilon <- .5 *distancepstart( points2D[x1, ], points2D, 
+			residualIndices(c(x1, x2), endout, nrow(points2D)) )
 	p <- points2D[x2, ] + epsilon * escapeDir(a1, a2)
 	p.out <- p + diam *(p - points2D[x2, ]) / norM(p - points2D[x2, ])
 	set.int <- list()
 	for(i in 1 : (nrow(points2D) - 1))  
 		set.int[[i]] <- singleIntersectionS(rbind(p, p.out, points2D[i : (i + 1), ]), "binary")  
 	temp <- setdiff(which(sapply(set.int, length) > 1), endout)
-	word <- c();
-	sign <- c();
+	word <- c()
+	sign <- c()
 	exponent <- rep(0, 1 + length(endout))
 	if (length(temp) > 0) {
 		for (i in 1 : length(temp)) {
 			word[i] <- findComponent(temp[[i]], endout) + 1
 			sign[i] <- sign(set.int[[temp[i]]][2])
 		}
- 		exponent <- c()
+		exponent <- c()
 		pf <- cbind(word, sign)
 		for(i in 1 : (1 + length(endout)))
 			exponent[i] <- sum(pf[which(word == i), 2])
-		}
-return(exponent)
+	}
+	return(list(exponent = exponent,
+			p = p,
+			p.out = p.out,
+			set.int = set.int))
 }
 
-
-computeFactors <- function(points3D, ends, polynomial) {
+computeFactors <- function (points3D, ends) {
 	ris <- buildRis(points3D, ends, TRUE)
 	temp <- ris[[1]]
 	points2D <- ris[[2]]
 	endout <- temp[[6]]
 	overf <- c()
-	for( i in seq(length = length(temp[[5]]))) 
+	for (i in seq(length = length(temp[[5]]))) 
 		overf[i] <- findComponent(temp[[5]][i], endout)
 	overf <- as.vector(table(overf + 1))
 	undercross <- temp[[7]]
 	positionQsovercross <- temp[[5]]
-	exponent <- escape(points2D, undercross, positionQsovercross, endout) 
-	rotf <- rotFactor(points3D, ends)                         
-#Send to sympy       
-	toeval7 <- paste('endout=[', paste(endout ,collapse=","), ']', sep = '') 
-	toeval8 <- paste('esponente=[', paste(exponent ,collapse=","), ']', sep = '')
-	toeval9 <- paste('rotf=[', paste(rotf ,collapse=","), ']', sep = '')
-	toeval10 <- paste('overf=[', paste(as.vector(overf) ,collapse=","), ']', sep = '')
+	exponent <- escapePath(points2D, undercross, positionQsovercross, endout)	
+	rotf <- rotFactor(points3D, ends)
+	toeval7 <- paste("endout=[", paste(endout, collapse = ","), "]", sep = "")
+	toeval8 <- paste("esponente=[", paste(exponent$exponent, collapse = ","), "]", sep = "") #edited
+	toeval9 <- paste("rotf=[", paste(rotf, collapse = ","), "]", sep = "")
+	toeval10 <- paste("overf=[", paste(as.vector(overf), collapse = ","), "]", sep = "")
 	sympy(toeval7)
 	sympy(toeval8)
 	sympy(toeval9)
 	sympy(toeval10)
-sympy("t=zeros((1,1+len(endout)));i=-1
+	sympy("t=zeros((1,1+len(endout)));
+i=-1
 while (i<len(endout)):
-  i=i+1;t[i]=Symbol('t'+str(i+1))
+	i=i+1;
+	t[i]=Symbol('t'+str(i+1))
 z=zeros((1,len(endout)+1))
 word=1
 i=-1
 while(i<len(endout)):
-  i=i+1
-  z[i]=t[i]**(esponente[i])
-  word=word/z[i]*t[i]**((rotf[i]/2.-overf[i]/2.))")
-polnorm <- sympy("factor(archdet)*word/(t[len(endout)]-1)") 
-return(list(polnorm, rotf, overf, exponent))
+	i=i+1 
+	z[i]=t[i]**(esponente[i])
+	word=word/z[i]*t[i]**((rotf[i]/2.-overf[i]/2.))"
+)
+	#polnorm <- sympy("factor(archdet)*word/(t[len(endout)]-1)")
+	word <- sympy("word")
+	return(list(word, rotf, overf, exponent))
 }
 
-mVA <- function(points3D, ends = c(), normalized = FALSE) {
-	ris <- buildRis(points3D ,ends, FALSE)
-	FC<-sapply(1 : ris[[1]], findComponent, ris[[3]])
+
+mVA <- function (points3D, ends = c(), normalized = FALSE, return.A = FALSE)
+{
+	ris <- buildRis(points3D, ends, FALSE)
+	if(is.null( ris )) {								##unknot/unlink for sure
+		return(ifelse( ( is.null(ends) || identical(ends, numeric(0))), '1', '0') )		##
+	}												##
+	endout <- ris[[6]]
+	FC <- sapply(1:ris[[1]], findComponent, ris[[3]])
 	triples <- matrix(0, nrow = ris[[1]], ncol = 3)
-	for (k in 1 : nrow(triples)) 
-		triples[k, ] <- ris[[2]][[k]] - 1
+	for (k in 1:nrow(triples)) triples[k, ] <- ris[[2]][[k]] - 1
 	row.str <- apply(triples, 1, paste, collapse = ",")
-	matrix.str <- paste('[[', paste(row.str, collapse = '] , ['), ']]', sep = '')
-	toeval1 <- paste("nunder=", as.character(ris[[1]], sep = ''))
-	toeval2 <- paste('triple=Matrix(', matrix.str, ')', sep = '')
-	toeval3 <- paste('eends=[', paste(ris[[3]] ,collapse=","), ']', sep = '')
-	toeval4 <- paste('signs=[', paste(ris[[4]] ,collapse=","), ']', sep = '')
-	toeval5 <- paste('FC=[', paste(FC ,collapse=","), ']', sep = '')
+	matrix.str <- paste("[[", paste(row.str, collapse = "] , ["), "]]", sep = "")
+	toeval1 <- paste("nunder=", as.character(ris[[1]], sep = ""))
+	toeval2 <- paste("triple=Matrix(", matrix.str, ")", sep = "")
+	toeval3 <- paste("eends=[", paste(ris[[3]], collapse = ","), "]", sep = "")
+	toeval4 <- paste("signs=[", paste(ris[[4]], collapse = ","), "]", sep = "")
+	toeval5 <- paste("FC=[", paste(FC, collapse = ","), "]", sep = "")
+	toeval6 <- paste("endout=[", paste(endout, collapse = ","), "]", sep = "")
 	sympy(toeval1)
 	sympy(toeval2)
 	sympy(toeval3)
 	sympy(toeval4)
 	sympy(toeval5)
+	sympy(toeval6)
 	sympy("t=zeros((1,len(eends)))
 i=-1
 while (i<len(eends)-1):
@@ -406,21 +377,43 @@ while(k<nunder):
 		Arch[triple[k,0],triple[k,0]]=Arch[triple[k,0],triple[k,0]]+1
 		Arch[triple[k,0],triple[k,2]]=Arch[triple[k,0],triple[k,2]]+t[-1+FC[int(triple[k,1])]]-1
 	k=k+1
-	archdet=Arch[0:(nunder-1),0:(nunder-1)].det()
-	p = Poly(archdet, t[0])
-	q=zeros((1,p.degree+1))
-	for i in range(0,p.degree+1):
-		q[i]=p.coeff(i)
-	a=0
-	i=-1
-	while (a==0 and p.degree>0):
-		i=i+1
-		a=q[i]
-	r=p.degree
-	poly=(archdet/t[0]**(int((r+i)/2))).expand()")
+archdet=Arch[0:(nunder-1),0:(nunder-1)].det()
+p = Poly(archdet, t[0])
+q=zeros((1,p.degree+1))
+for i in range(0,p.degree+1):
+	q[i]=p.coeff(i)
+a=0
+i=-1
+while (a==0 and p.degree>0):
+	i=i+1
+	a=q[i]
+r=p.degree
+polyB=factor(archdet)/(t[len(endout)]-1)"
+)
+
+if(( is.null(ends) || identical(ends, numeric(0)) )) { #if it is a knot
+	sympy( "poly=(factor(archdet)/t[0]**(int((r+i)/2))).expand()" ) ##factor added
 	polynomial <- sympy("poly")
-	if(normalized) {
-		polynomial <- computeFactors(points3D, ends, polynomial)[[1]]
 	}
-	return(polynomial)
+else { #it is a link
+	if(!normalized) { #and normalized = FALSE
+		polynomial <- sympy('polyB')
+	}
+		else { #and normalized = TRUE
+				word <- computeFactors(points3D, ends)[[1]]
+				polynomial <- sympy("polyB * word")
+			}
+}
+polynomial <- parseToR(polynomial)
+
+	if (normalized & !return.A) return(polynomial)
+	if (normalized & return.A) {
+		A <- sympy('Arch')
+		return(list( polynomial = polynomial, A = A) )
+	}
+	if (!normalized & !return.A) return(polynomial)
+	if (!normalized & return.A) {
+		A <- sympy('Arch')
+		return(list( polynomial = polynomial, A = A) )
+	}
 }

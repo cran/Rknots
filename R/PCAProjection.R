@@ -5,9 +5,7 @@
 # Author: Federico Comoglio @ D-BSSE, ETH Zurich
 ###############################################################################
 
-PCAProjection <-
-		function (points3D) 
-{
+PCAProjection <- function (points3D) {
 	nrow <- nrow(points3D)
 	ncol <- ncol(points3D)
 	centroid <- apply(points3D, 2, mean)
@@ -17,8 +15,8 @@ PCAProjection <-
 	eigenvectors <- t(eigen(covM)$vectors)
 	if (det(eigenvectors) < 0) 
 		eigenvectors[3, ] = -1 * eigenvectors[3, ]
-	points3D.rotated <- points3D %*% t(eigenvectors)
-	return(points3D.rotated)
+	points3D.rot <- points3D %*% t(eigenvectors)
+	return(points3D.rot)
 }
 
 

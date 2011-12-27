@@ -6,18 +6,18 @@
 # Author: Federico Comoglio @ D-BSSE, ETH Zurich
 ###############################################################################
 
-
-plotKnot3D <- function (points3D, ends, text = FALSE, showNC = FALSE, ...) {
+plotKnot3D <- function (points3D, ends = c(), text = FALSE, showNC = FALSE, colors = list(), ...) {
 	n <- nrow(points3D)
 	ncomp <- length(ends) + 1
-	colors <- 1 : ncomp
+	if( identical(colors, list()) ) 
+		colors <- as.list( 1 : ncomp) #not supplied by the user
 	exends <- c(0, ends, n)
 	intervals <- list()
 	for (k in 1 : ncomp) 
 		intervals[[k]] <- (exends[k] + 1) : (exends[k + 1])
 	for (i in 1 : length(intervals)) 
 		plotComponent(points3D[intervals[[i]], ], text, showNC,
-				col = colors[i],  ...)
+				col = colors[[i]],  ...)
 }
 
 plotComponent <- function (points3D, text = FALSE, showNC = FALSE, ...) {

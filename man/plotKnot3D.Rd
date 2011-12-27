@@ -1,61 +1,41 @@
 \name{plotKnot3D}
 \alias{plotKnot3D}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{3D plot of a polygonal link
-%%  ~~function to do ... ~~
-}
-\description{3D plot of a polygonal link
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
-}
+
+\title{3D plot of a polygonal link}
+
+\description{3D plot of a polygonal link}
+
 \usage{
-plotKnot3D(points3D, ends, text = FALSE, showNC = FALSE, ...)
+plotKnot3D(points3D, ends = c(), text = FALSE, showNC = FALSE, colors = list(), ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
-  \item{points3D}{an \eqn{N} x 3 matrix of the \eqn{x}, \eqn{y}, \eqn{z} coordinates of a polygonal link
-%%     ~~Describe \code{points3D} here~~
+  \item{points3D}{an \eqn{N} x 3 matrix of the \eqn{x}, \eqn{y}, \eqn{z} coordinates of a polygonal link}
+  \item{ends}{a vector of positive integers defining the separators of the polygonal link. Default empty (polygonal knot)}
+  \item{text}{logical, if TRUE the numbering of the points is shown }
+  \item{showNC}{logical, if TRUE the N-terminus and C-terminus of a protein are labeled in red}
+  \item{colors}{a list of color vectors, one for each component. Each vector \eqn{i} can be of length 1, containing the color 
+  to be used for the component \eqn{i} or of length equal to the number of points of the component \eqn{i}, thus 
+  specifying the color to be used for each edge. If not supplied, single colors from 1 to \eqn{n} are used, where \eqn{n} is the number of link components}
+  \item{\dots}{other parameters for \code{lines3d} or \code{spheres3d}}
 }
-  \item{ends}{a vector of positive integers defining the separators of the polygonal link
-%%     ~~Describe \code{ends} here~~
-}
-  \item{text}{logical, if TRUE the numbering of the points is shown 
-%%     ~~Describe \code{text} here~~
-}
-  \item{showNC}{logical, if TRUE the N-terminus and C-terminus of a protein are labeled in red
-%%     ~~Describe \code{showNC} here~~
-}
-  \item{\dots}{other parameters for \code{lines3d} or \code{spheres3d}
-%%     ~~Describe \code{\dots} here~~
-}
-}
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
+
 \value{
 Called for its effect.
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
-}
-\references{
-%% ~put references to the literature/web site here ~
-}
-\author{
-Federico Comoglio
-%%  ~~who you are~~
-}
-\note{
-%%  ~~further notes~~
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+\author{
+Federico Comoglio, federico.comogli@bsse.ethz.ch
+}
+
+\note{
+This is a low-level function.
+}
 
 \seealso{
-\code{\link{plotKnotDiagram}}
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{plotDiagram}}
 }
+
 \examples{
 ##3D plot of the Hopf link
 

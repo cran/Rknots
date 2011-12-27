@@ -30,7 +30,7 @@ contribute <- function(ancestor, signs, skein.sign) {
 	return(global.contr)
 }
 
-HOMFLYpolynomial <- function(leaves, tree, skein.sign) {
+HOMFLYpolynomial <- function(leaves, tree, skein.sign  = -1) {
 	
 	sympy(Var('l'))
 	sympy(Var('m'))
@@ -57,6 +57,7 @@ HOMFLYpolynomial <- function(leaves, tree, skein.sign) {
 				paste(components.contribute, '*', ancestors.contribute, collapse = '+'), ').expand()')
 		#print(toeval)
 		polynomial <- sympy(toeval)
+		polynomial <- parseToR(polynomial)
 	}
 	return(polynomial)
 }

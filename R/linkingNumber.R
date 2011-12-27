@@ -6,16 +6,6 @@
 # Author: Federico Comoglio @ D-BSSE, ETH Zurich
 ###############################################################################
 
-skeinSign <- function (points3D, edge.indices) 
-{
-	x <- (points3D[edge.indices[1] + 1, ] - points3D[edge.indices[1], ])[1:2]
-	y <- (points3D[edge.indices[2] + 1, ] - points3D[edge.indices[2], ])[1:2]
-	A <- rbind(x,y)
-	cp <- A[1, 1] * A[2, 2] - A[1, 2] * A[2, 1]
-	pointsij <- points3D[rep(edge.indices, each = 2) + c(0, 1), ]
-	return(sign(cp) * singleIntersection(pointsij, "sign"))
-}
-
 linkingNumber <- function(points3D, ends, M = c())
 {
 	nedge <- nrow(points3D) - 1

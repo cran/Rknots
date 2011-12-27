@@ -48,34 +48,21 @@ and \eqn{\epsilon(c)} is the sign of the crossing.
 %% ~put references to the literature/web site here ~
 }
 \author{
-Federico Comoglio
-%%  ~~who you are~~
-}
-\note{
-%%  ~~further notes~~
+Federico Comoglio, federico.comoglio@bsse.ethz.ch
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+\note{
+This is a low-level function.
+}
+
 
 \seealso{
 \code{\link{intersectionMatrix}}
-%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
-\examples{
-##Compute the linking number of the Hopf link
-hopf <- matrix(c(0.000084, -1.667027, -0.000300,
-    0.179585, 0.249735, 0.991541,
-    -0.179478, 0.250355, -0.991211,
-    0.000084, -1.667027, -0.000300,
-    -0.991561, -0.250457, 0.179413,
-    -0.000415, 1.666817, 0.000107,
-    0.991784, -0.249435, -0.179541,
-    -0.991561, -0.250457, 0.179413),
-    ncol = 3, byrow = TRUE)
 
-linkingNumber(points3D = hopf, ends = 4)
+\examples{
+link <- makeExampleKnot(k = FALSE)
+linkingNumber(points3D = link$points3D, ends = link$ends)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
+
 \keyword{invariants}
-% \keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

@@ -6,26 +6,37 @@
 # Author: Federico Comoglio @ D-BSSE, ETH Zurich
 ###############################################################################
 
+#cross2 <- function(v1, v2) {
+#	V <- rbind(v1, v2)
+#	A <- V[ ,2:3]
+#	B <- V[ ,c(1,3)]
+#	C <- V[ ,1:2]
+#	cx <- A[1, 1] * A[2, 2] - A[1, 2]* A[2, 1]	
+#	cy <- B[1, 1] * B[2, 2] - B[1, 2]* B[2, 1]
+#	cz <- C[1, 1] * C[2, 2] - C[1, 2]* C[2, 1]
+#	return(c(cx, -cy, cz))
+#}
+
 cross <- function(v1, v2) {
-	V <- rbind(v1, v2)
-	A <- V[ ,2:3]
-	B <- V[ ,c(1,3)]
-	C <- V[ ,1:2]
-	cx <- A[1, 1] * A[2, 2] - A[1, 2]* A[2, 1]	
-	cy <- B[1, 1] * B[2, 2] - B[1, 2]* B[2, 1]
-	cz <- C[1, 1] * C[2, 2] - C[1, 2]* C[2, 1]
+	cx <- v1[2] * v2[3] - v2[2] * v1[3]
+	cy <- v1[1] * v2[3] - v1[3] * v2[1]
+	cz <- v1[1] * v2[2] - v2[1] * v1[2]
 	return(c(cx, -cy, cz))
 }
 
-interiorTriangle <- function(triangle2D, point) {
-	vectors2D <- rbind(triangle2D[2, ] - triangle2D[1, ], triangle2D[3, ] - triangle2D[1, ])
-	det.v <- vectors2D[1, 1] * vectors2D[2, 2] - vectors2D[1, 2] * vectors2D[2, 1]
-	Ct <- matrix(c(vectors2D[2, 2], 
-					-vectors2D[1, 2], -vectors2D[2, 1], vectors2D[1, 1]), ncol = 2)
+
+interiorTriangle <- function(triangle2D, point) { #triangle2D is a 3x2 Matrix
+	v1 <- triangle2D[2, ] - triangle2D[1, ] #the two edges
+	v2 <- triangle2D[3, ] - triangle2D[1, ]
+	#vectors2D <- rbind(triangle2D[2, ] - triangle2D[1, ], triangle2D[3, ] - triangle2D[1, ])
+	#det.v <- vectors2D[1, 1] * vectors2D[2, 2] - vectors2D[1, 2] * vectors2D[2, 1]
+	det.v <- v1[1] * v2[2] - v1[2] * v2[1]
+	Ct <- matrix(c(v2[2], -v1[2], -v2[1], v1[1]), ncol = 2)
 	xs <- (1 / det.v) * Ct %*% (point - triangle2D[1, ])
-	inside <- (xs[1] >0 & xs[2] > 0 & sum(xs) < 1)
+	inside <- (xs[1] > 0 & xs[2] > 0 & sum(xs) < 1)
 	return(inside)
 }
+
 
 triangleIntersection <- function(triangle3D, segment) {
 	v1 <- triangle3D[3, ] - triangle3D[1, ]
@@ -36,8 +47,6 @@ triangleIntersection <- function(triangle3D, segment) {
 	inside <- interiorTriangle(triangle3D[, 1 : 2], P[1 : 2])
 	return(inside)
 } 
-
-
 
 
 segmentSet <- function(comp, i, extends)

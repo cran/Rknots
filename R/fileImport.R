@@ -6,12 +6,13 @@
 ###############################################################################
 
 loadProtein <- function (pdbID, join.gaps = FALSE, cutoff = 7, ...) {
-	require( bio3d )
+	pkg <- require(bio3d)
+	if(!pkg) stop('The package bio3d is missing. bio3d is not available on CRAN but can be downloaded at http://mccammon.ucsd.edu/~bgrant/bio3d/')
 	if (missing(pdbID)) 
 		stop("fileImport: argument 'filename' missing, with no default\n")
 	if (!is.character(pdbID)) 
 		stop("fileImport: argument 'filename' must be string\n")    
-	pdb <- read.pdb(pdbID, ...)
+	pdb <- bio3d::read.pdb(pdbID, ...)
 	tab.selection <- as.matrix(table(pdb$atom[,"chain"], pdb$atom[,"elety"]))
 	tab.selection <- as.matrix(tab.selection [,"CA"])
 	colnames(tab.selection) <- "#aminoacids"

@@ -111,13 +111,13 @@ xClean <- function(points3D, ends, quadrilateral, ij, S, toevaluate)
 		switch(in.out,
 				"1" = {k <- toevaluate[i];
 					pos <- 2;
-					neigh <- matrix(c(torusShift(k[1], 1), 1), nr = 1)},
+					neigh <- matrix(c(torusShift(k[1], 1), 1), nrow = 1)},
 				"2" = {k <- torusShift(toevaluate[i], -1)
 					pos<-1;
-					neigh <- matrix(c(k[1],2), nr = 1)},
+					neigh <- matrix(c(k[1],2), nrow = 1)},
 				"3" = {k <- c(torusShift(toevaluate[i], -1), toevaluate[i]);
 					pos <- c(1,2);
-					neigh <- matrix(c(k[1], 2, torusShift(k[2], 1), 1), nr=2, byrow=TRUE)}
+					neigh <- matrix(c(k[1], 2, torusShift(k[2], 1), 1), nrow = 2, byrow = TRUE)}
 		)
 		for(j in 1 : length(k))
 		{

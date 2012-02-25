@@ -21,10 +21,6 @@ centroidClosure(points3D, w = 2)
   that contains the structure, the endpoints will be extended by \code{w} \eqn{r}.
 }
 }
-
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
 \value{
 an \eqn{(N+2)} x 3 matrix of the \eqn{x}, \eqn{y}, \eqn{z} coordinates of a polygonal link. 
 The first and the last rows contain the coordinates of the extended endpoints.

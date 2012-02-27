@@ -44,5 +44,6 @@ export(
 	get2D,
 	computeFactors,
 	escapePath,
-	vertexPresentation
+	vertexPresentation,
+	getKnotType
 )

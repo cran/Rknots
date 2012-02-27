@@ -22,10 +22,6 @@ Rolfsen.table.ms
 \format{
 A list of 250 matrices (N x 3)
 }
-%- maybe also 'usage' for other objects documented here.
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
 
 \references{
 	The Knot Server, \url{http://www.colab.sfu.ca/KnotPlot/KnotServer}
@@ -44,8 +40,4 @@ A list of 250 matrices (N x 3)
 	can be accessed by \code{Rolfsen.table.ms$"3.1"}.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{datasets}

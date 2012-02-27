@@ -21,9 +21,6 @@ AlexanderBriggs(points3D, ends = c())
 \item{points3D}{an \eqn{N} x 3 matrix of the \eqn{x}, \eqn{y}, \eqn{z} coordinates of a polygonal link}
 \item{ends}{a vector of positive integers defining the separators of the polygonal link}
 }
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
 \value{
 A list of two slots:
   \item{points3D}{an \eqn{M} x 3 matrix of the \eqn{x}, \eqn{y}, \eqn{z} coordinates of the reduced structure, \eqn{M\leq N}}

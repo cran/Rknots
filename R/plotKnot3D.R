@@ -34,10 +34,10 @@ plotComponent <- function (points3D, text = FALSE, showNC = FALSE, ...) {
 	spheres3d(points3D, ...)
 	if (text) {
 		texts3d(points3D[2 : (nrow(points3D) - 1), ], 
-				text = as.character(2 : (nrow(points3D) - 1)),
+				texts = as.character(2 : (nrow(points3D) - 1)),
 				cex = 0.8, adj = 1.35, col = "black")
 	}
 	if (showNC)
-		texts3d(points3D[c(1, nrow(points3D)), ], text = c("N", "C"),
+		texts3d(points3D[c(1, nrow(points3D)), ], texts = c("N", "C"),
 				cex = 1.5, adj = 1.35, col = "red")
 }

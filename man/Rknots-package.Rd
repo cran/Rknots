@@ -16,13 +16,14 @@ either biological or synthetic knotted polymers, with a major focus on proteins.
 \tabular{ll}{
 Package: \tab Rknots\cr
 Type: \tab Package\cr
-Version: \tab 1.2\cr
-Date: \tab 2011-12-24\cr
+Version: \tab 1.2.1\cr
+Date: \tab 2012-02-25\cr
 License: \tab GPL-2\cr
 LazyLoad: \tab yes\cr
 }
 %%~~ An overview of how to use the package, including the most important ~~
 The Rknots package contains functions for the topological analysis of polymers, with a major focus on proteins. 
+Notice that Rknots depends on the package bio3d (it can be downloaded from http://mccammon.ucsd.edu/~bgrant/bio3d/) not available through CRAN. 
 The package provides the following set of tools:
 
 1)Functions to import 3D structures or fetch pdb file from the Protein Data Bank (PDB) are implemented with a set of utilities.
@@ -65,11 +66,3 @@ ArXiv:1104.3405
 %%~~ Optionally other standard keywords, one per line, from file KEYWORDS in ~~
 %%~~ the R documentation directory ~~
 \keyword{package}
-\seealso{
-%%~~ Optional links to other man pages, e.g. ~~
-%%~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
-}
-%%\examples{
-%%rotationMatrix(pi/3)
-%%~~ simple examples of the most important functions ~~
-%%}

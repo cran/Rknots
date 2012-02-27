@@ -16,7 +16,7 @@ function (theta)
 		theta <- as.numeric(theta)
 	}
 	R <- matrix(c(cos(theta), -sin(theta), 0, sin(theta), cos(theta), 
-					0, 0, 0, 1), nc = 3, byrow = TRUE)
+					0, 0, 0, 1), ncol = 3, byrow = TRUE)
 	return(R)
 }
 

@@ -3,7 +3,7 @@
 \alias{Rknots}
 \docType{package}
 \title{
-Rknots: topological knots characterization with R
+Rknots: topological characterization of knotted 3D structures with R
 %%~~ package title ~~
 }
 \description{
@@ -16,8 +16,8 @@ either biological or synthetic knotted polymers, with a major focus on proteins.
 \tabular{ll}{
 Package: \tab Rknots\cr
 Type: \tab Package\cr
-Version: \tab 1.2.1\cr
-Date: \tab 2012-02-25\cr
+Version: \tab 1.2.2\cr
+Date: \tab 2014-12-29\cr
 License: \tab GPL-2\cr
 LazyLoad: \tab yes\cr
 }
@@ -58,6 +58,8 @@ Maintainer: Federico Comoglio \email{federico.comoglio@bsse.ethz.ch}
 %%~~ The author and/or maintainer of the package ~~
 }
 \references{
+Comoglio F. and Rinaldi M. (2012) Rknots: topological analysis of knotted biopolymers with R, Bioinformatics 28 (10), 1400-1401
+
 Comoglio F. and Rinaldi M. (2011) A Topological Framework for the Computation of the HOMFLY Polynomial and Its Application to Proteins 
 PLoS ONE 6(4): e18693, doi:10.1371/journal.pone.0018693 
 ArXiv:1104.3405

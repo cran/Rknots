@@ -10,7 +10,7 @@
 
 <meta name="author" content="Federico Comoglio and Maurizio Rinaldi" />
 
-<meta name="date" content="2015-12-22" />
+<meta name="date" content="2015-12-23" />
 
 <title>Rknots Package Vignette</title>
 
@@ -72,7 +72,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="header">
 <h1 class="title">Rknots Package Vignette</h1>
 <h4 class="author"><em>Federico Comoglio and Maurizio Rinaldi</em></h4>
-<h4 class="date"><em>2015-12-22</em></h4>
+<h4 class="date"><em>2015-12-23</em></h4>
 </div>
 
 
@@ -374,7 +374,7 @@ for(i in <span class="dv">1</span> :<span class="st"> </span><span class="dv">6<
 <li>The first chain (A) of the E. Coli alkaline phosphatase (D153G mutant). This protein presents a structural gap, a potential source of false positives.</li>
 </ul>
 <p>A protein can be loaded from the file system or fetched from the Protein Data Bank using the loadProtein function, which returns a list of matrices where each element contains the 3D coordinates of a given protein chain. By default, loadProtein performs gap finding for each chain backbone. A cutoff parameter corresponding to the maximum allowed euclidean distance between two consecutive alpha-Carbon residues facilitates a custom definition of a gap. If a distance is greater than cutoff, the chain is split at the corresponding position and subchains are generated.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">protein &lt;-<span class="st"> </span><span class="kw">loadProtein</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata/2k0a.pdb&quot;</span>, <span class="dt">package=</span><span class="st">&quot;Rknots&quot;</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">protein &lt;-<span class="st"> </span><span class="kw">loadProtein</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata/2K0A.pdb&quot;</span>, <span class="dt">package=</span><span class="st">&quot;Rknots&quot;</span>))</code></pre></div>
 <pre><code>##   PDB has multiple END/ENDMDL records 
 ##   multi=FALSE: taking first record only 
 ##   HEADER    METAL BINDING PROTEIN                   31-JAN-08   2K0A               
@@ -550,7 +550,7 @@ polynomials &lt;-<span class="st"> </span><span class="kw">lapply</span>( <span 
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] Rknots_1.3.0   bio3d_2.2-3    rSymPy_0.2-1.1 rJython_0.0-4 
+## [1] Rknots_1.3.1   bio3d_2.2-3    rSymPy_0.2-1.1 rJython_0.0-4 
 ## [5] rjson_0.2.15   rJava_0.9-7    rgl_0.95.1201 
 ## 
 ## loaded via a namespace (and not attached):

@@ -101,7 +101,7 @@ identical( converted, jones.k)
 #  }
 
 ## ----eval=TRUE-----------------------------------------------------------
-protein <- loadProtein(system.file("extdata/2k0a.pdb", package="Rknots"))
+protein <- loadProtein(system.file("extdata/2K0A.pdb", package="Rknots"))
 protein<- loadProtein('2K0A') #from the PDB
 str(protein)
 
